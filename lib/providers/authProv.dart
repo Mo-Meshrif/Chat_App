@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:chat_app/httpExcptions.dart';
+import '../httpExcptions.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,9 +11,14 @@ class AuthProv with ChangeNotifier {
   DateTime _expireTime;
   Timer _authTimer;
   bool signInState = true;
-
+  bool clickedForgetPassword = false;
   void sign() {
     signInState = !signInState;
+    notifyListeners();
+  }
+
+  void checkClickedPass() {
+    clickedForgetPassword = !clickedForgetPassword;
     notifyListeners();
   }
 
@@ -71,6 +76,21 @@ class AuthProv with ChangeNotifier {
 
   Future<void> signIn(String email, String password) async {
     return _auth(email, password, 'signInWithPassword');
+  }
+
+  Future<void> restPassword(String email) async {
+    final url =
+        'https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyAQLNbFnliJuMrESr8LmjhPBdn0p331REg';
+    try {
+      final response = await http.post(url,
+          body: jsonEncode({'email': email, 'requestType': 'PASSWORD_RESET'}));
+      final responsBody = jsonDecode(response.body);
+      if (responsBody['error'] != null) {
+        throw HttpException(responsBody['error']['message']);
+      }
+    } catch (e) {
+      throw e;
+    }
   }
 
   Future<bool> tryAutoLogin() async {

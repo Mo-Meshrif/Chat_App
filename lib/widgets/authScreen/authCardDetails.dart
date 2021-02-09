@@ -1,5 +1,6 @@
-import 'package:chat_app/httpExcptions.dart';
-import 'package:chat_app/providers/authProv.dart';
+import '../../httpExcptions.dart';
+import '../../providers/authProv.dart';
+import '../../providers/usersProv.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:toast/toast.dart';
@@ -19,6 +20,7 @@ class _AuthCardDetailsState extends State<AuthCardDetails> {
   Widget build(BuildContext context) {
     final s = MediaQuery.of(context).size;
     final signIn = Provider.of<AuthProv>(context).signInState;
+    final image = Provider.of<UsersProv>(context).imageUrl;
     return Padding(
       padding: EdgeInsets.only(top: s.height * 0.23),
       child: Container(
@@ -37,9 +39,16 @@ class _AuthCardDetailsState extends State<AuthCardDetails> {
                         ? Padding(
                             padding: const EdgeInsets.only(bottom: 8.0),
                             child: InkWell(
-                              onTap: null,
+                              onTap: () =>
+                                  Provider.of<UsersProv>(context, listen: false)
+                                      .getImageUrl(),
                               child: CircleAvatar(
+                                backgroundImage:
+                                    image == null ? null : FileImage(image),
                                 backgroundColor: Colors.grey,
+                                child: image == null
+                                    ? Icon(Icons.camera_alt_outlined)
+                                    : null,
                                 radius: 40,
                               ),
                             ),
@@ -137,7 +146,9 @@ class _AuthCardDetailsState extends State<AuthCardDetails> {
                         : Padding(padding: EdgeInsets.all(0)),
                     signIn
                         ? InkWell(
-                            onTap: null,
+                            onTap: () =>
+                                Provider.of<AuthProv>(context, listen: false)
+                                    .checkClickedPass(),
                             child: Padding(
                               padding:
                                   const EdgeInsets.only(top: 10, bottom: 20),
@@ -153,6 +164,10 @@ class _AuthCardDetailsState extends State<AuthCardDetails> {
                         onPressed: () async {
                           if (_key.currentState.validate()) {
                             _key.currentState.save();
+                            if(image==null){
+                              Toast.show("Select image", context, duration: 2); 
+                              return ;
+                            }
                             try {
                               if (signIn) {
                                 await Provider.of<AuthProv>(context,
@@ -160,6 +175,8 @@ class _AuthCardDetailsState extends State<AuthCardDetails> {
                                     .signIn(_emailController.text,
                                         _passwordController.text);
                               } else {
+                                Provider.of<UsersProv>(context, listen: false)
+                                    .getUserName(_userNameController.text);
                                 await Provider.of<AuthProv>(context,
                                         listen: false)
                                     .signUp(_emailController.text,
@@ -172,7 +189,7 @@ class _AuthCardDetailsState extends State<AuthCardDetails> {
                                   errorMessage =
                                       "Your email address appears to be malformed.";
                                   break;
-                                case "INVAILD_PASSWORD":
+                                case "INVALID_PASSWORD":
                                   errorMessage = "Your password is wrong.";
                                   break;
                                 case "WEAK_PASSWORD":
@@ -191,7 +208,7 @@ class _AuthCardDetailsState extends State<AuthCardDetails> {
                               }
                               Toast.show("$errorMessage", context, duration: 2);
                             } catch (e) {
-                              Toast.show("Contact the developer !", context,duration: 2);
+                              Toast.show("$e", context, duration: 2);
                             }
                           }
                         },
@@ -216,8 +233,12 @@ class _AuthCardDetailsState extends State<AuthCardDetails> {
                           onTap: () =>
                               Provider.of<AuthProv>(context, listen: false)
                                   .sign(),
-                          child:
-                              Text(signIn ? 'Sign up Now !' : 'Sign in Now !'),
+                          child: Text(
+                            signIn ? 'Sign up Now !' : 'Sign in Now !',
+                            style: TextStyle(
+                              color: Colors.deepPurple[600],
+                            ),
+                          ),
                         )
                       ],
                     )
