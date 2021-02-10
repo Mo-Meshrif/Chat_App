@@ -22,6 +22,10 @@ class UsersProv with ChangeNotifier {
     return _imageUrl;
   }
 
+   String get userName {
+    return _userName;
+  }
+
   Future<void> getImageUrl() async {
     final ImagePicker _picker = ImagePicker();
     try {
@@ -42,13 +46,21 @@ class UsersProv with ChangeNotifier {
     }
     final ref = FirebaseStorage.instance
         .ref()
-        .child('user_images')
+        .child('users_image')
         .child('$_userId' + '.jpg');
     await ref.putFile(_imageUrl);
     final url = await ref.getDownloadURL();
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc('$_userId')
-        .set({'userName': _userName, 'image': url});
+    await FirebaseFirestore.instance.collection('users').doc('$_userId').set(
+      {
+        'userId': _userId,
+        'userName': _userName,
+        'image': url,
+      },
+    );
+  }
+  void clear(){
+    _imageUrl=null;
+    _userName=null;
+    notifyListeners();
   }
 }
