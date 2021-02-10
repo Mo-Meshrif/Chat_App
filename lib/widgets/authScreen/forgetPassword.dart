@@ -52,6 +52,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                     Container(
                       width: s.width * 0.9,
                       height: 50,
+                      // ignore: deprecated_member_use
                       child: RaisedButton(
                         color: Colors.deepPurple[600],
                         onPressed: () async {
@@ -71,6 +72,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                                           content:
                                               Text('Check your mail inbox'),
                                           actions: [
+                                            // ignore: deprecated_member_use
                                             RaisedButton(
                                               color: Colors.deepPurple[600],
                                               onPressed: () =>

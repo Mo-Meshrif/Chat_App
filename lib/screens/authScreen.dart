@@ -22,7 +22,7 @@ class AuthScreen extends StatelessWidget {
         !clickedPassword
             ? Positioned(
                 top: s.height * 0.14,
-                left: s.width * 0.325,
+                left: s.width<428.0?s.width * 0.33:s.width*0.335,
                 child: Column(
                   children: [
                     Text(
@@ -37,7 +37,7 @@ class AuthScreen extends StatelessWidget {
                 ))
             : Positioned(
                 top: s.height * 0.29,
-                left: s.width * 0.275,
+                left: s.width<428.0?s.width * 0.29:s.width*0.3,
                 child: Text(
                   'Rest Password',
                   style: TextStyle(fontSize: 25, color: Colors.white),

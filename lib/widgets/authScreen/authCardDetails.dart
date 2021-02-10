@@ -159,12 +159,13 @@ class _AuthCardDetailsState extends State<AuthCardDetails> {
                     Container(
                       width: s.width * 0.9,
                       height: 50,
+                      // ignore: deprecated_member_use
                       child: RaisedButton(
                         color: Colors.deepPurple[600],
                         onPressed: () async {
                           if (_key.currentState.validate()) {
                             _key.currentState.save();
-                            if(image==null){
+                            if(image==null&&!signIn){
                               Toast.show("Select image", context, duration: 2); 
                               return ;
                             }
