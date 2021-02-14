@@ -118,6 +118,7 @@ class AuthProv with ChangeNotifier {
       _authTimer = null;
       _authTimer.cancel();
     }
+    signInState = true;
     notifyListeners();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.clear();

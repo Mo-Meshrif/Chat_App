@@ -165,9 +165,9 @@ class _AuthCardDetailsState extends State<AuthCardDetails> {
                         onPressed: () async {
                           if (_key.currentState.validate()) {
                             _key.currentState.save();
-                            if(image==null&&!signIn){
-                              Toast.show("Select image", context, duration: 2); 
-                              return ;
+                            if (image == null && !signIn) {
+                              Toast.show("Select image", context, duration: 2);
+                              return;
                             }
                             try {
                               if (signIn) {
