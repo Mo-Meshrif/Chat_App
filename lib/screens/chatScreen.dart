@@ -5,7 +5,7 @@ import '../providers/authProv.dart';
 import '../providers/usersProv.dart';
 import '../widgets/chatScreen/upperBody/callUserBar.dart';
 import '../widgets/chatScreen/upperBody/chatAndFriendsButtons.dart';
-import '../widgets/chatScreen/lowerBody/lastmessages/messagesBub.dart';
+import '../widgets/chatScreen/lowerBody/messagesBub.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

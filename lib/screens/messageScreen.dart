@@ -10,12 +10,10 @@ import 'package:provider/provider.dart';
 
 class MessageScreen extends StatefulWidget {
   final String friendId;
-  final bool isMeOpened;
-  final bool isNotMeOpened;
+  
   MessageScreen({
     this.friendId,
-    this.isMeOpened,
-    this.isNotMeOpened,
+    
   });
 
   @override
@@ -127,9 +125,7 @@ class _MessageScreenState extends State<MessageScreen> {
                           Provider.of<ChatsProv>(context, listen: false)
                               .uploadChat(
                                   widget.friendId,
-                                  enteredMessage,
-                                  widget.isMeOpened ?? false,
-                                  widget.isNotMeOpened ?? false,users);
+                                  enteredMessage,users);
                           _messageController.clear();
                         },
                   child: Icon(Icons.send),

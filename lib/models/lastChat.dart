@@ -6,15 +6,12 @@ class LastChat {
   final User me;
   final User notme;
   final String lastMessage;
-  final bool isMeOpened;
-  final bool isNotMeOpened;
+
   LastChat({
     this.me,
     this.messageTime,
     this.notme,
     this.lastMessage,
-    this.isMeOpened=false,
-    this.isNotMeOpened=false,
   });
 
   factory LastChat.fromJson(Map<String, dynamic> jsonData) {
@@ -29,8 +26,6 @@ class LastChat {
           userName: jsonDecode(jsonData['notme'])['userName'],
           imageUrl: jsonDecode(jsonData['notme'])['imageUrl']),
       lastMessage: jsonData['lastMessage'],
-      isMeOpened: jsonData['isMeOpened'],
-      isNotMeOpened: jsonData['isNotMeOpened'],
     );
   }
 
@@ -47,8 +42,6 @@ class LastChat {
           'imageUrl': lastChat.notme.imageUrl,
         }),
         'lastMessage': lastChat.lastMessage,
-        'isMeOpened': lastChat.isMeOpened,
-        'isNotMeOpened': lastChat.isNotMeOpened,
       };
 
   static String encode(List<LastChat> lastChat) => json.encode(

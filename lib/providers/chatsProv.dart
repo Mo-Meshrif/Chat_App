@@ -6,7 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ChatsProv with ChangeNotifier {
   List<LastChat> _lastChats = [];
-  
+
   String _userId;
 
   List<LastChat> get lastChats {
@@ -18,8 +18,8 @@ class ChatsProv with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> uploadChat(String friendId, String message, bool isMeOpened,
-      bool isNotMeOpened,List<User> _users) async {
+  Future<void> uploadChat(
+      String friendId, String message, List<User> _users) async {
     final messageTime = Timestamp.now();
     await FirebaseFirestore.instance.collection('chats').doc().set({
       'createdAt': messageTime,
@@ -27,81 +27,103 @@ class ChatsProv with ChangeNotifier {
       'to': friendId,
       'message': message,
     });
-    final existingIndex =
+    final existingFIndex =
         _lastChats.indexWhere((element) => element.notme.userId == friendId);
+    final existingUIndex =
+        _lastChats.indexWhere((element) => element.notme.userId == _userId);
     if (_users.isNotEmpty) {
-      if (existingIndex >= 0) {
-        _lastChats.removeAt(existingIndex);
+      if (existingFIndex >= 0) {
+        _lastChats.removeAt(existingFIndex);
         _lastChats.insert(
             0,
             LastChat(
-                me: _users.firstWhere((user) => user.userId == _userId),
-                notme: _users.firstWhere((user) => user.userId == friendId),
-                messageTime: messageTime.toDate(),
-                lastMessage: message,
-                isMeOpened: isMeOpened,
-                isNotMeOpened: isNotMeOpened));
+              me: _users.firstWhere((user) => user.userId == _userId),
+              notme: _users.firstWhere((user) => user.userId == friendId),
+              messageTime: messageTime.toDate(),
+              lastMessage: message,
+            ));
+      } else if (existingUIndex >= 0) {
+        _lastChats.removeAt(existingUIndex);
+        _lastChats.insert(
+            0,
+            LastChat(
+              me: _users.firstWhere((user) => user.userId == friendId),
+              notme: _users.firstWhere((user) => user.userId == _userId),
+              messageTime: messageTime.toDate(),
+              lastMessage: message,
+            ));
       } else {
         _lastChats.insert(
             0,
             LastChat(
-                me: _users.firstWhere((user) => user.userId == _userId),
-                notme: _users.firstWhere((user) => user.userId == friendId),
-                messageTime: messageTime.toDate(),
-                lastMessage: message,
-                isMeOpened: isMeOpened,
-                isNotMeOpened: isNotMeOpened));
+              me: _users.firstWhere((user) => user.userId == _userId),
+              notme: _users.firstWhere((user) => user.userId == friendId),
+              messageTime: messageTime.toDate(),
+              lastMessage: message,
+            ));
       }
     }
-    notifyListeners(); 
+    notifyListeners();
   }
 
-  Future<void> getLastChat(List<User>us) async {
+  Future<void> getLastChat(List<User> us) async {
     final prefs = await SharedPreferences.getInstance();
     final fetchedData = FirebaseFirestore.instance
         .collection('chats')
         .orderBy('createdAt', descending: false)
         .snapshots();
-    fetchedData.forEach((element) { 
-       for(int i =0;i<element.docs.length;i++){
-         final existingIndex = _lastChats
-              .indexWhere((user) => user.notme.userId == element.docs[i]['to']);
-          if (us.isNotEmpty) {
-            if (existingIndex >= 0) {
-              _lastChats.removeAt(existingIndex);
-              _lastChats.insert(
-                  0,
-                  LastChat(
-                      me: us.firstWhere(
-                          (user) => user.userId == element.docs[i]['from']),
-                      notme: us.firstWhere(
-                          (user) => user.userId == element.docs[i]['to']),
-                      messageTime: element.docs[i]['createdAt'].toDate(),
-                      lastMessage: element.docs[i]['message'],
-                      isMeOpened: true,
-                      isNotMeOpened: true));
-            } else {
-              _lastChats.insert(
-                  0,
-                  LastChat(
-                      me: us.firstWhere(
-                          (user) => user.userId == element.docs[i]['from']),
-                      notme: us.firstWhere(
-                          (user) => user.userId == element.docs[i]['to']),
-                      messageTime: element.docs[i]['createdAt'].toDate(),
-                      lastMessage:element.docs[i]['message'],
-                      isMeOpened: true,
-                      isNotMeOpened: true));
-            }
+    fetchedData.forEach((element) {
+      for (int i = 0; i < element.docs.length; i++) {
+        final existingFIndex = _lastChats
+            .indexWhere((user) => user.notme.userId == element.docs[i]['to']);
+        final existingUIndex = _lastChats
+            .indexWhere((user) => user.notme.userId == element.docs[i]['from']);
+        if (us.isNotEmpty) {
+          if (existingFIndex >= 0) {
+            _lastChats.removeAt(existingFIndex);
+            _lastChats.insert(
+                0,
+                LastChat(
+                  me: us.firstWhere(
+                      (user) => user.userId == element.docs[i]['from']),
+                  notme: us.firstWhere(
+                      (user) => user.userId == element.docs[i]['to']),
+                  messageTime: element.docs[i]['createdAt'].toDate(),
+                  lastMessage: element.docs[i]['message'],
+                ));
+          } else if (existingUIndex >= 0) {
+            _lastChats.removeAt(existingUIndex);
+            _lastChats.insert(
+                0,
+                LastChat(
+                  me: us.firstWhere(
+                      (user) => user.userId == element.docs[i]['to']),
+                  notme: us.firstWhere(
+                      (user) => user.userId == element.docs[i]['from']),
+                  messageTime: element.docs[i]['createdAt'].toDate(),
+                  lastMessage: element.docs[i]['message'],
+                ));
+          } else {
+            _lastChats.insert(
+                0,
+                LastChat(
+                  me: us.firstWhere(
+                      (user) => user.userId == element.docs[i]['from']),
+                  notme: us.firstWhere(
+                      (user) => user.userId == element.docs[i]['to']),
+                  messageTime: element.docs[i]['createdAt'].toDate(),
+                  lastMessage: element.docs[i]['message'],
+                ));
           }
-       }
+        }
+      }
     });
     notifyListeners();
     final String encodedData = LastChat.encode(_lastChats);
     prefs.setString('lastChatData', encodedData);
   }
 
-    getSavedData() async {
+  getSavedData() async {
     final prefs = await SharedPreferences.getInstance();
     if (!prefs.containsKey('lastChatData')) {
       return;
