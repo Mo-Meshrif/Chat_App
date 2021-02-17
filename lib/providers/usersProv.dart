@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/user.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,11 @@ class UsersProv with ChangeNotifier {
   String _userName;
   File _imageUrl;
   bool chUser = false;
+
+  String get userId {
+    return _userId;
+  }
+
   void getAuthParameters(String id) {
     _userId = id;
     notifyListeners();
@@ -81,6 +87,7 @@ class UsersProv with ChangeNotifier {
   }
 
   Future<void> getUsersData() async {
+    final prefs = await SharedPreferences.getInstance();
     final QuerySnapshot usersData = await FirebaseFirestore.instance
         .collection('users')
         .orderBy('userName')
@@ -97,6 +104,18 @@ class UsersProv with ChangeNotifier {
             imageUrl: user.data()['image']));
       }
     });
+    notifyListeners();
+    final String encodedData = User.encode(_users);
+    prefs.setString('usersData', encodedData);
+  }
+
+  getSavedData() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (!prefs.containsKey('usersData')) {
+      return;
+    }
+    final String decodedData = prefs.getString('usersData');
+    _users = User.decode(decodedData);
     notifyListeners();
   }
 

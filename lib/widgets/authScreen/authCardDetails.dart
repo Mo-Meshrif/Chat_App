@@ -1,6 +1,7 @@
 import '../../httpExcptions.dart';
 import '../../providers/authProv.dart';
 import '../../providers/usersProv.dart';
+import '../../providers/chatsProv.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:toast/toast.dart';
@@ -16,6 +17,13 @@ class _AuthCardDetailsState extends State<AuthCardDetails> {
   TextEditingController _passwordController = new TextEditingController();
   TextEditingController _userNameController = new TextEditingController();
   bool isVisibil = false;
+  @override
+  void didChangeDependencies() {
+    Provider.of<UsersProv>(context, listen: false).getSavedData();
+     final users = Provider.of<UsersProv>(context, listen: false).users;
+      Provider.of<ChatsProv>(context, listen: false).getLastChat(users);
+    super.didChangeDependencies();
+  }
   @override
   Widget build(BuildContext context) {
     final s = MediaQuery.of(context).size;
