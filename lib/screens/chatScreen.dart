@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:chat_app/providers/chatsProv.dart';
+
 import '../widgets/chatScreen/lowerBody/usersBody.dart';
 import '../providers/authProv.dart';
 import '../providers/usersProv.dart';
@@ -18,6 +20,7 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     try {
+      Provider.of<ChatsProv>(context, listen: false).clearSavedData();
       Provider.of<UsersProv>(context, listen: false).setUsersData();
     } catch (e) {
       print(e);

@@ -132,14 +132,16 @@ class ChatsProv with ChangeNotifier {
     _lastChats = LastChat.decode(decodedData);
     notifyListeners();
   }
+  clearSavedData()async{
+    final prefs = await SharedPreferences.getInstance();
+        final fetchedData =
+        FirebaseFirestore.instance.collection('chats').snapshots();
+    fetchedData.forEach((element) {
+      if (element.docs.isEmpty) {
+        _lastChats = [];
+        notifyListeners();
+        prefs.remove('lastChatData');
+      }
+    });
+  }
 }
-
-//       final fetchedData =
-//         FirebaseFirestore.instance.collection('chats').snapshots();
-//     fetchedData.forEach((element) {
-//       if (element.docs.isEmpty) {
-//         _lastChats = [];
-//         notifyListeners();
-//         return;
-//       }
-//     });
