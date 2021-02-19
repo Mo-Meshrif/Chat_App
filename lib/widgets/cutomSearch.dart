@@ -1,3 +1,4 @@
+import '../providers/authProv.dart';
 import '../providers/usersProv.dart';
 import '../screens/messageScreen.dart';
 import 'package:provider/provider.dart';
@@ -23,7 +24,8 @@ class CustomSearch extends SearchDelegate<User> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    List<User> users = Provider.of<UsersProv>(context).users;
+    final userId=Provider.of<AuthProv>(context).userId;
+    List<User> users = Provider.of<UsersProv>(context).findOtherUsersById(userId);
     final fitlteredUsers =
         users.where((user) => user.userName.startsWith(query)).toList();
     return fitlteredUsers.isNotEmpty
