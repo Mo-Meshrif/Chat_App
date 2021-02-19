@@ -4,11 +4,11 @@ import '../../../providers/usersProv.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class CallUserBar extends StatelessWidget {
+class UserBar extends StatelessWidget {
   final IconData icon;
   final Function ontap;
   final User specificUser;
-  CallUserBar({
+  UserBar({
     this.icon,
     this.ontap,
     this.specificUser,

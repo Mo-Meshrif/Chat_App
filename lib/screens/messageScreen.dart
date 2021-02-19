@@ -2,7 +2,7 @@ import 'dart:io';
 import '../providers/chatsProv.dart';
 import '../providers/usersProv.dart';
 import '../providers/authProv.dart';
-import '../widgets/chatScreen/upperBody/callUserBar.dart';
+import '../widgets/chatScreen/upperBody/userBar.dart';
 import '../widgets/chatScreen/lowerBody/dismissibleDelete.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -40,9 +40,9 @@ class _MessageScreenState extends State<MessageScreen> {
         children: [
           Container(
             color: Colors.grey[300],
-            height: Platform.isAndroid ? s.height * 0.19 : s.height * 0.15,
+            height: Platform.isAndroid ? s.height * 0.19 : s.height * 0.16,
             padding: EdgeInsets.only(top: 43, left: 20, right: 20),
-            child: CallUserBar(
+            child: UserBar(
               icon: Icons.arrow_back,
               ontap: () => Navigator.of(context).pop(),
               specificUser: notMe,

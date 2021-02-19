@@ -4,7 +4,7 @@ import '../providers/chatsProv.dart';
 import '../widgets/chatScreen/lowerBody/usersBody.dart';
 import '../providers/authProv.dart';
 import '../providers/usersProv.dart';
-import '../widgets/chatScreen/upperBody/callUserBar.dart';
+import '../widgets/chatScreen/upperBody/userBar.dart';
 import '../widgets/chatScreen/upperBody/chatAndFriendsButtons.dart';
 import '../widgets/chatScreen/lowerBody/messagesBub.dart';
 import 'package:flutter/material.dart';
@@ -37,9 +37,9 @@ class _ChatScreenState extends State<ChatScreen> {
         children: [
           Container(
             color: Colors.grey[300],
-            height: Platform.isAndroid ? s.height * 0.19 : s.height * 0.15,
+            height: Platform.isAndroid ? s.height * 0.19 : s.height * 0.16,
             padding: EdgeInsets.only(top: 43, left: 20, right: 20),
-            child: CallUserBar(
+            child: UserBar(
               icon: Icons.search,
               ontap: ()=>showSearch(context: context, delegate: CustomSearch()),
               specificUser:
