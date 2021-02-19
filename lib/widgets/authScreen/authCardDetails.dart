@@ -19,10 +19,14 @@ class _AuthCardDetailsState extends State<AuthCardDetails> {
   bool isVisibil = false;
   @override
   void didChangeDependencies() {
-    Provider.of<UsersProv>(context, listen: false).getSavedData();
     final users = Provider.of<UsersProv>(context, listen: false).users;
     Provider.of<ChatsProv>(context, listen: false).getLastChat(users);
     super.didChangeDependencies();
+  }
+  @override
+  void initState() {
+    Provider.of<UsersProv>(context, listen: false).getUsersData();
+    super.initState();
   }
   @override
   Widget build(BuildContext context) {

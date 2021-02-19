@@ -27,17 +27,7 @@ void main() async {
   );
 }
 
-class MyApp extends StatefulWidget {
-  @override
-  _MyAppState createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  @override
-  void initState() {
-    Provider.of<UsersProv>(context, listen: false).getUsersData();
-    super.initState();
-  }
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

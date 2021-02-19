@@ -19,8 +19,12 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     try {
+      Provider.of<UsersProv>(context, listen: false).getSavedData();
       Provider.of<ChatsProv>(context, listen: false).clearSavedDataIfNoChats();
-      Provider.of<UsersProv>(context, listen: false).setUsersData();
+      final sign = Provider.of<AuthProv>(context, listen: false).signInState;
+      if (!sign) {
+        Provider.of<UsersProv>(context, listen: false).setUsersData();
+      }
     } catch (e) {
       print(e);
     }
@@ -41,7 +45,8 @@ class _ChatScreenState extends State<ChatScreen> {
             padding: EdgeInsets.only(top: 43, left: 20, right: 20),
             child: UserBar(
               icon: Icons.search,
-              ontap: ()=>showSearch(context: context, delegate: CustomSearch()),
+              ontap: () =>
+                  showSearch(context: context, delegate: CustomSearch()),
               specificUser:
                   Provider.of<UsersProv>(context).findUserById(userId),
             ),
