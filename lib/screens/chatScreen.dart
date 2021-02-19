@@ -1,5 +1,5 @@
 import 'dart:io';
-import '../widgets/cutomSearch.dart';
+import '../widgets/chatScreen/upperBody/cutomSearch.dart';
 import '../providers/chatsProv.dart';
 import '../widgets/chatScreen/lowerBody/usersBody.dart';
 import '../providers/authProv.dart';

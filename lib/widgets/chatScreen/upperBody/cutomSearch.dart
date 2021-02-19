@@ -1,8 +1,8 @@
-import '../providers/authProv.dart';
-import '../providers/usersProv.dart';
-import '../screens/messageScreen.dart';
+import '../../../providers/authProv.dart';
+import '../../../providers/usersProv.dart';
+import '../../../screens/messageScreen.dart';
 import 'package:provider/provider.dart';
-import '../models/user.dart';
+import '../../../models/user.dart';
 import 'package:flutter/material.dart';
 
 class CustomSearch extends SearchDelegate<User> {
