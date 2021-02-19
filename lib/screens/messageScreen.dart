@@ -1,18 +1,18 @@
 import 'dart:io';
+import '../providers/chatsProv.dart';
 import '../providers/usersProv.dart';
 import '../providers/authProv.dart';
-import '../providers/chatsProv.dart';
 import '../widgets/chatScreen/upperBody/callUserBar.dart';
+import '../widgets/chatScreen/lowerBody/dismissibleDelete.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class MessageScreen extends StatefulWidget {
   final String friendId;
-  
+
   MessageScreen({
     this.friendId,
-    
   });
 
   @override
@@ -22,18 +22,19 @@ class MessageScreen extends StatefulWidget {
 class _MessageScreenState extends State<MessageScreen> {
   TextEditingController _messageController = new TextEditingController();
   String enteredMessage = '';
-@override
+  @override
   void didChangeDependencies() {
     final users = Provider.of<UsersProv>(context, listen: false).users;
     Provider.of<ChatsProv>(context, listen: false).getLastChat(users);
     super.didChangeDependencies();
   }
+
   @override
   Widget build(BuildContext context) {
     final s = MediaQuery.of(context).size;
     final userId = Provider.of<AuthProv>(context).userId;
     final notMe = Provider.of<UsersProv>(context).findUserById(widget.friendId);
-    final users=Provider.of<UsersProv>(context).users;
+    final users = Provider.of<UsersProv>(context).users;
     return Scaffold(
       body: Column(
         children: [
@@ -67,22 +68,31 @@ class _MessageScreenState extends State<MessageScreen> {
                               widget.friendId) {
                             return Align(
                                 alignment: Alignment.topRight,
-                                child: Container(
-                                  margin: EdgeInsets.only(bottom: 10),
-                                  padding: EdgeInsets.all(10),
-                                  constraints: BoxConstraints(
-                                      minWidth: 40,
-                                      maxWidth: 100,
-                                      minHeight: 30,
-                                      maxHeight: 100),
-                                  decoration: BoxDecoration(
-                                      color: Colors.blue[800],
-                                      borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(10),
-                                          bottomLeft: Radius.circular(10))),
-                                  child: Text(
-                                    '${messageSnap.data.docs[i]['message']}',
-                                    style: TextStyle(color: Colors.white),
+                                child: DismissibleDelete(
+                                  dir: DismissDirection.endToStart,
+                                  spacifickey: UniqueKey().toString(),
+                                  onDismissed: (_) => Provider.of<ChatsProv>(
+                                          context,
+                                          listen: false)
+                                      .deleteMessage(
+                                          messageSnap.data.docs[i].id),
+                                  child: Container(
+                                    margin: EdgeInsets.only(bottom: 10),
+                                    padding: EdgeInsets.all(10),
+                                    constraints: BoxConstraints(
+                                        minWidth: 40,
+                                        maxWidth: 100,
+                                        minHeight: 30,
+                                        maxHeight: 100),
+                                    decoration: BoxDecoration(
+                                        color: Colors.blue[800],
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(10),
+                                            bottomLeft: Radius.circular(10))),
+                                    child: Text(
+                                      '${messageSnap.data.docs[i]['message']}',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
                                   ),
                                 ));
                           }
@@ -91,22 +101,31 @@ class _MessageScreenState extends State<MessageScreen> {
                           if (messageSnap.data.docs[i]['to'] == userId) {
                             return Align(
                                 alignment: Alignment.topLeft,
-                                child: Container(
-                                  margin: EdgeInsets.only(bottom: 10),
-                                  padding: EdgeInsets.all(10),
-                                  constraints: BoxConstraints(
-                                      minWidth: 40,
-                                      maxWidth: 100,
-                                      minHeight: 30,
-                                      maxHeight: 100),
-                                  decoration: BoxDecoration(
-                                      color: Colors.grey[200],
-                                      borderRadius: BorderRadius.only(
-                                          topRight: Radius.circular(10),
-                                          bottomRight: Radius.circular(10))),
-                                  child: Text(
-                                    '${messageSnap.data.docs[i]['message']}',
-                                    style: TextStyle(color: Colors.black),
+                                child: DismissibleDelete(
+                                  dir: DismissDirection.startToEnd,
+                                  spacifickey: UniqueKey().toString(),
+                                  onDismissed: (_) => Provider.of<ChatsProv>(
+                                          context,
+                                          listen: false)
+                                      .deleteMessage(
+                                          messageSnap.data.docs[i].id),
+                                  child: Container(
+                                    margin: EdgeInsets.only(bottom: 10),
+                                    padding: EdgeInsets.all(10),
+                                    constraints: BoxConstraints(
+                                        minWidth: 40,
+                                        maxWidth: 100,
+                                        minHeight: 30,
+                                        maxHeight: 100),
+                                    decoration: BoxDecoration(
+                                        color: Colors.grey[200],
+                                        borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(10),
+                                            bottomRight: Radius.circular(10))),
+                                    child: Text(
+                                      '${messageSnap.data.docs[i]['message']}',
+                                      style: TextStyle(color: Colors.black),
+                                    ),
                                   ),
                                 ));
                           }
@@ -128,8 +147,7 @@ class _MessageScreenState extends State<MessageScreen> {
                       : () {
                           Provider.of<ChatsProv>(context, listen: false)
                               .uploadChat(
-                                  widget.friendId,
-                                  enteredMessage,users);
+                                  widget.friendId, enteredMessage, users);
                           _messageController.clear();
                         },
                   child: Icon(Icons.send),

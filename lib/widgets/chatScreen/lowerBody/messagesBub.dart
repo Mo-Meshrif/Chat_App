@@ -1,3 +1,5 @@
+import '../../../providers/usersProv.dart';
+import 'dismissibleDelete.dart';
 import '../../../models/lastChat.dart';
 import '../../../providers/authProv.dart';
 import '../../../providers/chatsProv.dart';
@@ -17,6 +19,7 @@ class _MessagesBubState extends State<MessagesBub> {
     Provider.of<ChatsProv>(context, listen: false).getSavedData();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     final userId = Provider.of<AuthProv>(context).userId;
@@ -29,28 +32,43 @@ class _MessagesBubState extends State<MessagesBub> {
             itemBuilder: (context, i) {
               if (lastChats[i].me.userId == userId ||
                   lastChats[i].notme.userId == userId) {
-                return ListTile(
-                  leading: CircleAvatar(
-                    backgroundImage: NetworkImage(
+                return DismissibleDelete(
+                  spacifickey: UniqueKey().toString(),
+                  dir: DismissDirection.endToStart,
+                  onDismissed: (_) {
+                    Provider.of<ChatsProv>(context, listen: false).deleteChat(
+                        userId,
                         lastChats[i].me.userId == userId
-                            ? lastChats[i].notme.imageUrl
-                            : lastChats[i].me.imageUrl),
-                  ),
-                  title: Text(lastChats[i].me.userId == userId
-                      ? lastChats[i].notme.userName
-                      : lastChats[i].me.userName),
-                  subtitle: Text(lastChats[i].lastMessage),
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) => MessageScreen(
-                              friendId: lastChats[i].me.userId == userId
-                                  ? lastChats[i].notme.userId
-                                  : lastChats[i].me.userId,
-                            )));
+                            ? lastChats[i].notme.userId
+                            : lastChats[i].me.userId);
+                    final users =
+                        Provider.of<UsersProv>(context, listen: false).users;
+                    Provider.of<ChatsProv>(context, listen: false)
+                        .getLastChat(users);
                   },
-                  trailing: Text(
-                    '${formatter.format(lastChats[i].messageTime)}',
-                    style: TextStyle(color: Colors.grey),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      backgroundImage: NetworkImage(
+                          lastChats[i].me.userId == userId
+                              ? lastChats[i].notme.imageUrl
+                              : lastChats[i].me.imageUrl),
+                    ),
+                    title: Text(lastChats[i].me.userId == userId
+                        ? lastChats[i].notme.userName
+                        : lastChats[i].me.userName),
+                    subtitle: Text(lastChats[i].lastMessage),
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => MessageScreen(
+                                friendId: lastChats[i].me.userId == userId
+                                    ? lastChats[i].notme.userId
+                                    : lastChats[i].me.userId,
+                              )));
+                    },
+                    trailing: Text(
+                      '${formatter.format(lastChats[i].messageTime)}',
+                      style: TextStyle(color: Colors.grey),
+                    ),
                   ),
                 );
               }

@@ -19,7 +19,7 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     try {
-      Provider.of<ChatsProv>(context, listen: false).clearSavedData();
+      Provider.of<ChatsProv>(context, listen: false).clearSavedDataIfNoChats();
       Provider.of<UsersProv>(context, listen: false).setUsersData();
     } catch (e) {
       print(e);
