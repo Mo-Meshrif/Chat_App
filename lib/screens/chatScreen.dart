@@ -1,4 +1,5 @@
 import 'dart:io';
+import '../widgets/cutomSearch.dart';
 import '../providers/chatsProv.dart';
 import '../widgets/chatScreen/lowerBody/usersBody.dart';
 import '../providers/authProv.dart';
@@ -40,7 +41,7 @@ class _ChatScreenState extends State<ChatScreen> {
             padding: EdgeInsets.only(top: 43, left: 20, right: 20),
             child: CallUserBar(
               icon: Icons.search,
-              ontap: () {},
+              ontap: ()=>showSearch(context: context, delegate: CustomSearch()),
               specificUser:
                   Provider.of<UsersProv>(context).findUserById(userId),
             ),
