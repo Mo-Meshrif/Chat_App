@@ -1,6 +1,5 @@
 import 'dart:io';
-import 'package:chat_app/providers/usersProv.dart';
-
+import '../providers/usersProv.dart';
 import '../providers/authProv.dart';
 import '../providers/chatsProv.dart';
 import '../widgets/chatScreen/upperBody/callUserBar.dart';
@@ -23,7 +22,12 @@ class MessageScreen extends StatefulWidget {
 class _MessageScreenState extends State<MessageScreen> {
   TextEditingController _messageController = new TextEditingController();
   String enteredMessage = '';
-
+@override
+  void didChangeDependencies() {
+    final users = Provider.of<UsersProv>(context, listen: false).users;
+    Provider.of<ChatsProv>(context, listen: false).getLastChat(users);
+    super.didChangeDependencies();
+  }
   @override
   Widget build(BuildContext context) {
     final s = MediaQuery.of(context).size;
@@ -110,7 +114,7 @@ class _MessageScreenState extends State<MessageScreen> {
                         return Padding(padding: EdgeInsets.all(0));
                       });
                 }
-                return Center(child: CircularProgressIndicator());
+                return Center(child: Text('No Message !'));
               },
             )),
           ),

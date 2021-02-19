@@ -1,7 +1,5 @@
 import 'dart:io';
-
-import 'package:chat_app/providers/chatsProv.dart';
-
+import '../providers/chatsProv.dart';
 import '../widgets/chatScreen/lowerBody/usersBody.dart';
 import '../providers/authProv.dart';
 import '../providers/usersProv.dart';

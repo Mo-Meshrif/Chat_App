@@ -1,7 +1,6 @@
 import '../../../models/lastChat.dart';
 import '../../../providers/authProv.dart';
 import '../../../providers/chatsProv.dart';
-import '../../../providers/usersProv.dart';
 import '../../../screens/messageScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -15,17 +14,9 @@ class MessagesBub extends StatefulWidget {
 class _MessagesBubState extends State<MessagesBub> {
   @override
   void initState() {
-    try {
-      Provider.of<ChatsProv>(context, listen: false).getSavedData();
-      final users = Provider.of<UsersProv>(context, listen: false).users;
-      Provider.of<ChatsProv>(context, listen: false).getLastChat(users).then(
-          (_) => Provider.of<ChatsProv>(context, listen: false).getSavedData());
-    } catch (e) {
-      print(e);
-    }
+    Provider.of<ChatsProv>(context, listen: false).getSavedData();
     super.initState();
   }
-
   @override
   Widget build(BuildContext context) {
     final userId = Provider.of<AuthProv>(context).userId;

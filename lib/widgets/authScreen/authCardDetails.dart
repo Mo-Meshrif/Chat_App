@@ -20,8 +20,8 @@ class _AuthCardDetailsState extends State<AuthCardDetails> {
   @override
   void didChangeDependencies() {
     Provider.of<UsersProv>(context, listen: false).getSavedData();
-     final users = Provider.of<UsersProv>(context, listen: false).users;
-      Provider.of<ChatsProv>(context, listen: false).getLastChat(users);
+    final users = Provider.of<UsersProv>(context, listen: false).users;
+    Provider.of<ChatsProv>(context, listen: false).getLastChat(users);
     super.didChangeDependencies();
   }
   @override
